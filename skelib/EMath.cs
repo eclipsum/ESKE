@@ -6,9 +6,11 @@ using System.Threading.Tasks;
 
 namespace skelib
 {
-    public enum EncryptionType
+    public class EMath
     {
-        COPY,
-        OVERWRITE
+        public static long Mod(long n, long x)
+        {
+            return ((n % x) + x) % x;
+        }
     }
 }

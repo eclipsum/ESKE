@@ -11,8 +11,8 @@ namespace Test
     {
         static void Main(string[] args)
         {
-            Key key = new Key(true, true, true, 0, 1, 10, 1);
-            Encryption.Encrypt(@"C:\FAKEPNGTEST\Eclippi.exe", key);
+            Key key = new Key(true, true, true, 500, 3, 10, 7);
+            Encryption.Encrypt(@"C:\FAKEPNGTEST\exported.exe", key);
         }
     }
 }

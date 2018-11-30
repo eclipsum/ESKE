@@ -1,17 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.IO;
 
 namespace skelib
 {
-    public class Encryption
+    public class Decryption
     {
         private static Random r = new Random();
 
-        public static void Encrypt(string FilePath, Key key)
+        public static void Decrypt(string FilePath, Key key)
         {
             FileInfo FI = new FileInfo(FilePath);
             string LastFile = null;
