@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,8 +12,16 @@ namespace Test
     {
         static void Main(string[] args)
         {
-            Key key = new Key(true, true, true, 500, 3, 10, 7);
-            Encryption.Encrypt(@"C:\FAKEPNGTEST\exported.exe", key);
+            while (true)
+            {
+                Console.WriteLine(Key.Random());
+                Console.ReadKey();
+                Console.Write("\b");
+            }
+            /*Key key = new Key(true, true, true, 0, 1, 2, 1);
+            Encryption.Encrypt(@"C:\FAKEPNGTEST\etd.txt", key);
+            Decryption.Decrypt(@"C:\FAKEPNGTEST\etd.txt.ske", key);
+            Console.ReadLine();*/
         }
     }
 }
