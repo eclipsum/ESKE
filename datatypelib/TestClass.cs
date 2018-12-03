@@ -4,13 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace skelib
+namespace datatypelib
 {
-    public class EMath
+    class TestClass
     {
-        public static long Mod(long n, long x)
+        Dec1 a = 1;
+        void e()
         {
-            return ((n % x) + x) % x;
+            
         }
     }
 }

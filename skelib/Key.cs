@@ -21,49 +21,68 @@ namespace skelib
 
         public Key(string key)
         {
-            if (key.Length != 39)
+            if (key.Length != 38)
+                throw new InvalidKeyException();
+            if (!(key.ToCharArray()[0] == '0' || key.ToCharArray()[0] == '1'))
                 throw new InvalidKeyException();
             char[] chars = key.ToCharArray();
+            
+            bool Direction = Convert.ToByte(chars[0] + "", 16) % 2 == 0;
+            byte Loops = Convert.ToByte(chars[1] + "", 16);
+            byte Operations = (byte)Convert.ToInt32(Misc.CharArrayToString(chars, 2, 4), 16);
+            byte Multiplier = (byte)Convert.ToInt32(Misc.CharArrayToString(chars, 4, 6), 16);
+            long Start = Convert.ToInt64(Misc.CharArrayToString(chars, 6, 16), 16);
+            long Jump = Convert.ToInt64(Misc.CharArrayToString(chars, 22, 16), 16);
 
-            if (byte.Parse(chars[0] + "", System.Globalization.NumberStyles.HexNumber) % 2 == 0)
-                this.Direction = false;
-            else
-                this.Direction = true;
-            this.Operations = byte.Parse(chars[1] + chars[2] + "", System.Globalization.NumberStyles.HexNumber);
-            this.Loops = byte.Parse(chars[3] + chars[4] + "", System.Globalization.NumberStyles.HexNumber);
-            this.Multiplier = byte.Parse(chars[5] + chars[6] + "", System.Globalization.NumberStyles.HexNumber);
-            this.Start = long.Parse(chars[7] + chars[8] + chars[9] + chars[10] + chars[11] + chars[12] + chars[13] + chars[14] + 
-                                     chars[15] + chars[16] +chars[17] +chars[18] +chars[19] +chars[20] +chars[21] +chars[22] + "", 
-                                     System.Globalization.NumberStyles.HexNumber);
-            this.Jump = long.Parse(chars[23] + chars[24] + chars[25] + chars[26] + chars[27] + chars[28] + chars[29] + chars[30] +
-                                   chars[31] + chars[32] + chars[33] + chars[34] + chars[35] + chars[36] + chars[37] + chars[38] + "",
-                                   System.Globalization.NumberStyles.HexNumber);
+            this.Direction = Direction;
+            this.Operations = Operations;
+            this.Loops = Loops;
+            this.Multiplier = Multiplier;
+            this.Start = Start;
+            this.Jump = Jump;
         }
 
         public Key(byte Operations, byte Loops, byte Multiplier, long Start, long Jump, bool Direction)
         {
-            this.Direction = Direction;//
+            this.Direction = Direction;
             this.Operations = Operations;
-            this.Start = Start;//
+            this.Start = Start;
             this.Multiplier = Multiplier;
-            this.Jump = Jump;//
-            this.Loops = Loops;//
+            this.Jump = Jump;
+            this.Loops = Loops;
         }
 
+        private byte _Loops;
         public byte Operations { get; set; }
+        public byte Loops { get { return _Loops;  } set { _Loops = (byte)(value % 16); } }
         public byte Multiplier { get; set; }
-        public byte Loops { get { return Loops; } set { Loops = (byte)(value % 16 + 4); } }
         public long Jump { get; set; }
-        public long Start { get { return Start; } set { if (value < 0) Start = 0; else Start = value; } }
+        public long Start { get; set; }
         public bool Direction { get; set; }
 
         private static readonly Random r = new Random();
 
-        public static string Random()
+        public static Key Random()
         {
             string key = "";
-            for(int i = 0; i < 39; i++)
-                key += r.Next(0, 16).ToString("X");
+            key += r.Next(0, 2).ToString("X");
+            key += r.Next(0, 16).ToString("X");
+            key += Misc.Fill(r.Next(0, 256).ToString("X"), 2);
+            key += Misc.Fill(r.Next(0, 256).ToString("X"), 2);
+            key += Misc.Fill(Misc.LongRandom().ToString("X"), 16);
+            key += Misc.Fill(Misc.LongRandom().ToString("X"), 16);
+            return new Key(key);
+        }
+
+        public override string ToString()
+        {
+            string key = "";
+            key += (this.Direction ? 1 : 0);
+            key += Convert.ToString(this.Loops, 16).ToUpper();
+            key += Misc.Fill(Convert.ToString(this.Operations, 16).ToUpper(), 2);
+            key += Misc.Fill(Convert.ToString(this.Multiplier, 16).ToUpper(), 2);
+            key += Misc.Fill(Convert.ToString(this.Start, 16).ToUpper(), 16);
+            key += Misc.Fill(Convert.ToString(this.Jump, 16).ToUpper(), 16);
             return key;
         }
     }
