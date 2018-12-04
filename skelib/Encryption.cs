@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 using System.Collections;
+using System.Numerics;
 
 namespace skelib
 {
@@ -20,7 +21,7 @@ namespace skelib
             File.Copy(EncryptedFilePath, temp + @"\" + EFName + "def.sketemp", true);
             string PreviousFilePath = temp + @"\" + EFName + "def.sketemp";
             string CurrentFilePath = null;
-            for (int i = 0; i < 1/*key.Loops + 4*/; i++)
+            for (int i = 0; i < key.Loops + 4; i++)
             {
                 CurrentFilePath = temp + @"\" + EFName + i + ".sketemp";
                 FileStream Previous = new FileStream(PreviousFilePath, FileMode.Open);
@@ -37,18 +38,35 @@ namespace skelib
 
                     int First = Previous.ReadByte();
                     int Second;
-                    if ((key.Direction && Misc.Mod(Pos - key.Start, PreviousFile.Length) < Misc.Mod(Pos + key.Jump - key.Start, PreviousFile.Length)) ||
-                       (!key.Direction && Misc.Mod(Pos + PreviousFile.Length - 1 - key.Start, PreviousFile.Length) > Misc.Mod(Pos + key.Jump - PreviousFile.Length - 1 - key.Start, PreviousFile.Length)))
+                    if (key.Direction)
                     {
-                        Previous.Seek(Misc.Mod(Pos + key.Jump, PreviousFile.Length), SeekOrigin.Begin);
-                        Second = Previous.ReadByte();
-                        Console.WriteLine("Previous: " + Misc.Mod(key.Start, PreviousFile.Length) + " | " + Pos + " | " + Misc.Mod(Pos + key.Jump, PreviousFile.Length) + " | " + Second);
+                        long SPos = Misc.Mod((BigInteger)Pos - key.Start, PreviousFile.Length);
+                        long SJump = Misc.Mod((BigInteger)Pos + key.Jump - key.Start, PreviousFile.Length);
+                        if (SJump >= SPos)
+                        {
+                            Previous.Seek(Misc.Mod((BigInteger)Pos + key.Jump, PreviousFile.Length), SeekOrigin.Begin);
+                            Second = Previous.ReadByte();
+                        }
+                        else
+                        {
+                            Current.Seek(Misc.Mod((BigInteger)Pos + key.Jump, PreviousFile.Length), SeekOrigin.Begin);
+                            Second = Current.ReadByte();
+                        }
                     }
                     else
                     {
-                        Current.Seek(Misc.Mod(Pos + key.Jump, PreviousFile.Length), SeekOrigin.Begin);
-                        Second = Current.ReadByte();
-                        Console.WriteLine("Current: " + Misc.Mod(key.Start, PreviousFile.Length) + " | " + Pos + " | " + Misc.Mod(Pos + key.Jump, PreviousFile.Length) + " | " + Second);
+                        long SPos = Misc.Mod((BigInteger)Pos - (key.Start + 1), PreviousFile.Length);
+                        long SJump = Misc.Mod((BigInteger)Pos + key.Jump - (key.Start + 1), PreviousFile.Length);
+                        if (SJump <= SPos)
+                        {
+                            Previous.Seek(Misc.Mod((BigInteger)Pos + key.Jump, PreviousFile.Length), SeekOrigin.Begin);
+                            Second = Previous.ReadByte();
+                        }
+                        else
+                        {
+                            Current.Seek(Misc.Mod((BigInteger)Pos + key.Jump, PreviousFile.Length), SeekOrigin.Begin);
+                            Second = Current.ReadByte();
+                        }
                     }
 
                     byte New;
@@ -57,6 +75,7 @@ namespace skelib
                     else
                         New = (byte)Misc.Mod(First - (Second * key.Multiplier), 256);
 
+                    Current.Seek(Pos, SeekOrigin.Begin);
                     Current.WriteByte(New);
 
                     if (key.Direction)
@@ -82,7 +101,7 @@ namespace skelib
             File.Copy(EncryptedFilePath, temp + @"\" + EFName + "def.sketemp", true);
             string PreviousFilePath = temp + @"\" + EFName + "def.sketemp";
             string CurrentFilePath = null;
-            for (int i = 0; i < 1/*key.Loops + 4*/; i++)
+            for (int i = 0; i < key.Loops + 4; i++)
             {
                 CurrentFilePath = temp + @"\" + EFName + i + ".sketemp";
                 FileStream Previous = new FileStream(PreviousFilePath, FileMode.Open);
@@ -92,23 +111,42 @@ namespace skelib
                 Current.SetLength(PreviousFile.Length);
 
                 long Pos = key.Start + (key.Direction ? -1 : 1);
-                for (long o = 0; o < PreviousFile.Length; o--)
+                for (long o = 0; o < PreviousFile.Length; o++)
                 {
                     Pos = Misc.Mod(Pos, PreviousFile.Length);
                     Previous.Seek(Pos, SeekOrigin.Begin);
 
                     int First = Previous.ReadByte();
                     int Second;
-                    if ((key.Direction && Misc.Mod(Pos - key.Start, PreviousFile.Length) < Misc.Mod(Pos + key.Jump - key.Start, PreviousFile.Length)) ||
-                        (!key.Direction && Misc.Mod(Pos + PreviousFile.Length - 1 - key.Start, PreviousFile.Length) > Misc.Mod(Pos + key.Jump - PreviousFile.Length - 1 - key.Start, PreviousFile.Length)))
+                    if (key.Direction)
                     {
-                        Previous.Seek(Misc.Mod(Pos + key.Jump, PreviousFile.Length), SeekOrigin.Begin);
-                        Second = Previous.ReadByte();
+                        long SPos = Misc.Mod((BigInteger)Pos - key.Start, PreviousFile.Length);
+                        long SJump = Misc.Mod((BigInteger)Pos + key.Jump - key.Start, PreviousFile.Length);
+                        if (SJump <= SPos)
+                        {
+                            Previous.Seek(Misc.Mod((BigInteger)Pos + key.Jump, PreviousFile.Length), SeekOrigin.Begin);
+                            Second = Previous.ReadByte();
+                        }
+                        else
+                        {
+                            Current.Seek(Misc.Mod((BigInteger)Pos + key.Jump, PreviousFile.Length), SeekOrigin.Begin);
+                            Second = Current.ReadByte();
+                        }
                     }
                     else
                     {
-                        Current.Seek(Misc.Mod(Pos + key.Jump, PreviousFile.Length), SeekOrigin.Begin);
-                        Second = Current.ReadByte();
+                        long SPos = Misc.Mod(Pos - ((BigInteger)key.Start + 1), PreviousFile.Length);
+                        long SJump = Misc.Mod((BigInteger)Pos + key.Jump - ((BigInteger)key.Start + 1), PreviousFile.Length);
+                        if (SJump >= SPos)
+                        {
+                            Previous.Seek(Misc.Mod((BigInteger)Pos + key.Jump, PreviousFile.Length), SeekOrigin.Begin);
+                            Second = Previous.ReadByte();
+                        }
+                        else
+                        {
+                            Current.Seek(Misc.Mod((BigInteger)Pos + key.Jump, PreviousFile.Length), SeekOrigin.Begin);
+                            Second = Current.ReadByte();
+                        }
                     }
 
                     byte New;

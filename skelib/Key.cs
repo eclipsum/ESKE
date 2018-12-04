@@ -9,6 +9,8 @@ namespace skelib
 {
     public class Key
     {
+        public static readonly Random r = new Random();
+
         public Key()
         {
             this.Direction = true;
@@ -27,10 +29,10 @@ namespace skelib
                 throw new InvalidKeyException();
             char[] chars = key.ToCharArray();
             
-            bool Direction = Convert.ToByte(chars[0] + "", 16) % 2 == 0;
+            bool Direction = Convert.ToByte(chars[0] + "", 16) % 2 == 1;
             byte Loops = Convert.ToByte(chars[1] + "", 16);
-            byte Operations = (byte)Convert.ToInt32(Misc.CharArrayToString(chars, 2, 4), 16);
-            byte Multiplier = (byte)Convert.ToInt32(Misc.CharArrayToString(chars, 4, 6), 16);
+            byte Operations = (byte)Convert.ToInt32(Misc.CharArrayToString(chars, 2, 2), 16);
+            byte Multiplier = (byte)Convert.ToInt32(Misc.CharArrayToString(chars, 4, 2), 16);
             long Start = Convert.ToInt64(Misc.CharArrayToString(chars, 6, 16), 16);
             long Jump = Convert.ToInt64(Misc.CharArrayToString(chars, 22, 16), 16);
 
@@ -59,8 +61,6 @@ namespace skelib
         public long Jump { get; set; }
         public long Start { get; set; }
         public bool Direction { get; set; }
-
-        private static readonly Random r = new Random();
 
         public static Key Random()
         {
