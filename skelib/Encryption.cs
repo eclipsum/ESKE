@@ -13,20 +13,45 @@ namespace skelib
     {
         public static string[] Split(this string str, int every)
         {
-            string[] a = new string[(int)Math.Ceiling((double)str.Length / every)];
+            List<string> a = new List<string>();
             char[] b = str.ToCharArray();
-            for (int i = 0; i < a.Length; i++)
+
+            string c = "";
+            for (int i = 0; i < str.Length; i++)
             {
-                for (int o = 0; o < every; o++)
+                c += b[i];
+                if ((i + 1) % every == 0)
                 {
-                    try
-                    {
-                        a[i] = b[i * every + o] + "";
-                    }
-                    catch { }
+                    a.Add(c);
+                    c = "";
                 }
             }
-            return a;
+            if (c != "")
+                a.Add(c);
+
+            return a.ToArray();
+        }
+
+        public static string AsString(this string[] str)
+        {
+            string x = "";
+            for (int i = 0; i < str.Length; i++)
+            {
+                x += str[i];
+            }
+            return x;
+        }
+
+        public static string AsString(this string[] str, string between)
+        {
+            string x = "";
+            for (int i = 0; i < str.Length; i++)
+            {
+                if (i != 0)
+                    x += between;
+                x += str[i];
+            }
+            return x;
         }
     }
 

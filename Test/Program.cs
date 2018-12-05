@@ -14,9 +14,6 @@ namespace Test
         static Random r = new Random();
         static void Main(string[] args)
         {
-            string a = "hejsan";
-            Console.WriteLine(a.Split(4));
-
             CryptTest();
         }
 
