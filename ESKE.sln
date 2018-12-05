@@ -1,13 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.28010.2036
+VisualStudioVersion = 15.0.26228.9
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "skelib", "skelib\skelib.csproj", "{5A884E36-E4CF-4545-B7D4-73D15DD4EEF6}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test", "Test\Test.csproj", "{058A80CE-0D25-489E-A266-E47DEC78FF40}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "datatypelib", "datatypelib\datatypelib.csproj", "{BE914B0B-AF7A-4F9F-B6A2-4A2DC8600128}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ESKEQ", "ESKE\ESKEQ.csproj", "{82A61569-BB34-4AA7-AAF8-3AAD8B83F1EB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -23,10 +23,10 @@ Global
 		{058A80CE-0D25-489E-A266-E47DEC78FF40}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{058A80CE-0D25-489E-A266-E47DEC78FF40}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{058A80CE-0D25-489E-A266-E47DEC78FF40}.Release|Any CPU.Build.0 = Release|Any CPU
-		{BE914B0B-AF7A-4F9F-B6A2-4A2DC8600128}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{BE914B0B-AF7A-4F9F-B6A2-4A2DC8600128}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{BE914B0B-AF7A-4F9F-B6A2-4A2DC8600128}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{BE914B0B-AF7A-4F9F-B6A2-4A2DC8600128}.Release|Any CPU.Build.0 = Release|Any CPU
+		{82A61569-BB34-4AA7-AAF8-3AAD8B83F1EB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{82A61569-BB34-4AA7-AAF8-3AAD8B83F1EB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{82A61569-BB34-4AA7-AAF8-3AAD8B83F1EB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{82A61569-BB34-4AA7-AAF8-3AAD8B83F1EB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

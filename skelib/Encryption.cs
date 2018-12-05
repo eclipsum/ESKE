@@ -59,6 +59,18 @@ namespace skelib
     {
         private static string temp = Environment.GetEnvironmentVariable("temp");
 
+        public static async Task EncryptAsync(string EncryptedFilePath, Key key)
+        {
+            await Task.Delay(10);
+            Encrypt(EncryptedFilePath, key);
+        }
+
+        public static async Task DecryptAsync(string EncryptedFilePath, Key key)
+        {
+            await Task.Delay(10);
+            Decrypt(EncryptedFilePath, key);
+        }
+
         public static void Encrypt(string EncryptedFilePath, Key key)
         {
             string EFName = Path.GetFileNameWithoutExtension(EncryptedFilePath);
@@ -102,13 +114,13 @@ namespace skelib
                     Operations[p] = Convert.ToByte(key.Operations.ToString("X").Split(2)[p], 16);
                 for (int p = 0; p < 8; p++)
                     Multipliers[p] = Convert.ToByte(key.Multipliers.ToString("X").Split(2)[p], 16);
-                if (new BitArray(Operations).Get((int)(Pos % 64)))
+                if (new BitArray(Operations).Get((int)(o % 64)))
                 {
-                    New = (byte)Misc.Mod(First + (Second * Multipliers[Pos % 8] + 5), 256);
+                    New = (byte)Misc.Mod(First + (Second * Multipliers[o % 8] + 5), 256);
                 }
                 else
                 {
-                    New = (byte)Misc.Mod(First - (Second * Multipliers[Pos % 8] + 5), 256);
+                    New = (byte)Misc.Mod(First - (Second * Multipliers[o % 8] + 5), 256);
                 }
 
                 Current.Seek(Pos, SeekOrigin.Begin);
@@ -167,13 +179,13 @@ namespace skelib
                     Operations[p] = Convert.ToByte(key.Operations.ToString("X").Split(2)[p], 16);
                 for (int p = 0; p < 8; p++)
                     Multipliers[p] = Convert.ToByte(key.Multipliers.ToString("X").Split(2)[p], 16);
-                if (new BitArray(Operations).Get((int)(Pos % 64)))
+                if (new BitArray(Operations).Get((int)((PreviousFile.Length - o - 1) % 64)))
                 {
-                    New = (byte)Misc.Mod(First - (Second * Multipliers[Pos % 8] + 5), 256);
+                    New = (byte)Misc.Mod(First - (Second * Multipliers[(PreviousFile.Length - o - 1) % 8] + 5), 256);
                 }
                 else
                 {
-                    New = (byte)Misc.Mod(First + (Second * Multipliers[Pos % 8] + 5), 256);
+                    New = (byte)Misc.Mod(First + (Second * Multipliers[(PreviousFile.Length - o - 1) % 8] + 5), 256);
                 }
 
                 Current.Seek(Pos, SeekOrigin.Begin);
