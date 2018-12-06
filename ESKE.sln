@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test", "Test\Test.csproj", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ESKEQ", "ESKE\ESKEQ.csproj", "{82A61569-BB34-4AA7-AAF8-3AAD8B83F1EB}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "extlib", "..\extlib\extlib\extlib.csproj", "{34DCCE0B-73FF-456E-99F7-876C61FEA2CF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{82A61569-BB34-4AA7-AAF8-3AAD8B83F1EB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{82A61569-BB34-4AA7-AAF8-3AAD8B83F1EB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{82A61569-BB34-4AA7-AAF8-3AAD8B83F1EB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{34DCCE0B-73FF-456E-99F7-876C61FEA2CF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{34DCCE0B-73FF-456E-99F7-876C61FEA2CF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{34DCCE0B-73FF-456E-99F7-876C61FEA2CF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{34DCCE0B-73FF-456E-99F7-876C61FEA2CF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -50,5 +50,11 @@
     <Compile Include="Key.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\extlib\extlib\extlib.csproj">
+      <Project>{34dcce0b-73ff-456e-99f7-876c61fea2cf}</Project>
+      <Name>extlib</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

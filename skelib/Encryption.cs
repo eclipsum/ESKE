@@ -6,69 +6,45 @@ using System.Threading.Tasks;
 using System.IO;
 using System.Collections;
 using System.Numerics;
+using extlib.Extensions;
+using extlib.Types;
 
 namespace skelib
 {
-    public static class Extensions
-    {
-        public static string[] Split(this string str, int every)
-        {
-            List<string> a = new List<string>();
-            char[] b = str.ToCharArray();
-
-            string c = "";
-            for (int i = 0; i < str.Length; i++)
-            {
-                c += b[i];
-                if ((i + 1) % every == 0)
-                {
-                    a.Add(c);
-                    c = "";
-                }
-            }
-            if (c != "")
-                a.Add(c);
-
-            return a.ToArray();
-        }
-
-        public static string AsString(this string[] str)
-        {
-            string x = "";
-            for (int i = 0; i < str.Length; i++)
-            {
-                x += str[i];
-            }
-            return x;
-        }
-
-        public static string AsString(this string[] str, string between)
-        {
-            string x = "";
-            for (int i = 0; i < str.Length; i++)
-            {
-                if (i != 0)
-                    x += between;
-                x += str[i];
-            }
-            return x;
-        }
-    }
-
     public class Encryption
     {
         private static string temp = Environment.GetEnvironmentVariable("temp");
 
         public static async Task EncryptAsync(string EncryptedFilePath, Key key)
         {
-            await Task.Delay(10);
+            await Task.Delay(0);
             Encrypt(EncryptedFilePath, key);
         }
 
         public static async Task DecryptAsync(string EncryptedFilePath, Key key)
         {
-            await Task.Delay(10);
+            await Task.Delay(0);
             Decrypt(EncryptedFilePath, key);
+        }
+
+        private static byte[] GetBuffer(FileStream fs, long pos, int length)
+        {
+            if (length + pos >= fs.Length)
+            {
+                byte[] buffer1 = new byte[fs.Length - pos];
+                byte[] buffer2 = new byte[length + pos - fs.Length];
+                fs.Seek(pos, SeekOrigin.Begin);
+                fs.Read(buffer1, 0, (int)(fs.Length - pos));
+                fs.Read(buffer2, 0, (int)(length + pos - fs.Length));
+                return buffer1.CombineWith(buffer2);
+            }
+            else
+            {
+                byte[] buffer = new byte[length];
+                fs.Seek(pos, SeekOrigin.Begin);
+                fs.Read(buffer, 0, length);
+                return buffer;
+            }
         }
 
         public static void Encrypt(string EncryptedFilePath, Key key)
@@ -87,25 +63,35 @@ namespace skelib
             Current.SetLength(PreviousFile.Length);
 
             long Pos = key.Start;
+            DoubleBuffer db = null;
             for (long o = 0; o < PreviousFile.Length; o++)
             {
                 Pos = Misc.Mod(Pos, PreviousFile.Length);
-                Previous.Seek(Pos, SeekOrigin.Begin);
+                if (o % 67108864 == 0)
+                {
+                    if (o != 0)
+                        Current.Write(db.buffer1, 0, db.buffer1.Length);
+                    db = new DoubleBuffer(GetBuffer(Previous, Pos, 67108864), Pos, GetBuffer(Previous, Pos + key.Jump, 67108864), Pos + key.Jump);
+                }
 
-                int First = Previous.ReadByte();
-                int Second;
+                //Previous.Seek(Pos, SeekOrigin.Begin);
+                //int First = Previous.ReadByte();
+
+                /*int Second;
                 long SPos = Misc.Mod((BigInteger)Pos - key.Start, PreviousFile.Length);
                 long SJump = Misc.Mod((BigInteger)Pos + key.Jump - key.Start, PreviousFile.Length);
                 if (SJump >= SPos)
                 {
-                    Previous.Seek(Misc.Mod((BigInteger)Pos + key.Jump, PreviousFile.Length), SeekOrigin.Begin);
-                    Second = Previous.ReadByte();
+                    //Previous.Seek(Misc.Mod((BigInteger)Pos + key.Jump, PreviousFile.Length), SeekOrigin.Begin);
+                    //Second = Previous.ReadByte();
                 }
                 else
                 {
-                    Current.Seek(Misc.Mod((BigInteger)Pos + key.Jump, PreviousFile.Length), SeekOrigin.Begin);
-                    Second = Current.ReadByte();
-                }
+                    //Current.Seek(Misc.Mod((BigInteger)Pos + key.Jump, PreviousFile.Length), SeekOrigin.Begin);
+                    //Second = Current.ReadByte();
+                }*/
+                int First = db.Get(Pos);
+                int Second = db.Get(Misc.Mod((BigInteger)Pos + key.Jump, PreviousFile.Length));
 
                 byte New;
                 byte[] Operations = new byte[8];
@@ -123,8 +109,9 @@ namespace skelib
                     New = (byte)Misc.Mod(First - (Second * Multipliers[o % 8] + 5), 256);
                 }
 
-                Current.Seek(Pos, SeekOrigin.Begin);
-                Current.WriteByte(New);
+                /*Current.Seek(Pos, SeekOrigin.Begin);
+                Current.WriteByte(New);*/
+                db.Set(Pos, New);
 
                 Pos++;
             }
