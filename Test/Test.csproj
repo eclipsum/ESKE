@@ -54,6 +54,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\extlib\extlib\extlib.csproj">
+      <Project>{34DCCE0B-73FF-456E-99F7-876C61FEA2CF}</Project>
+      <Name>extlib</Name>
+    </ProjectReference>
     <ProjectReference Include="..\skelib\skelib.csproj">
       <Project>{5a884e36-e4cf-4545-b7d4-73d15dd4eef6}</Project>
       <Name>skelib</Name>

@@ -69,9 +69,7 @@ namespace skelib
                 Pos = Misc.Mod(Pos, PreviousFile.Length);
                 if (o % 67108864 == 0)
                 {
-                    if (o != 0)
-                        Current.Write(db.buffer1, 0, db.buffer1.Length);
-                    db = new DoubleBuffer(GetBuffer(Previous, Pos, 67108864), Pos, GetBuffer(Previous, Pos + key.Jump, 67108864), Pos + key.Jump);
+                    
                 }
 
                 //Previous.Seek(Pos, SeekOrigin.Begin);
